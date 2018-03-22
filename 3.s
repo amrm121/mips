@@ -2,27 +2,28 @@
 NA: .word 0
 str: .asciiz "String a ser contado os 'a's"
 char: .byte 'a'
-
-.globl main
 .text
-#regs 5-7 os valores nao sao perdidos entre chamadas
-main:
-li $2, 10 #syscall SPIM 10 = EXIT
-la $6, str #t1 = str(adr) 
-lb $7, char
-lw $5, NA
+
+.globl start
+.ent start
+
+start:  
+la $16, str #$s0 = str(adr) 
+lb $17, char #$s1 = 'a' = 61 hx ascii
+lw $18, NA #var resposta $s2
 
 count:
-lb $4, 0($6)
-beq $4, $0, fim
-addi $6, $6, 1 #adiciono +1 byte no end p acessar prox char
-beq $4, $7, countchar #se str[i] = 'a' goto countchar
+lb $4, 0($16)
+beq $4, $0, fim #se = 0 fim da string
+addi $16, $16, 1 #adiciono +1 byte no end p acessar prox char
+beq $4, $17, countchar #se str[i] = 'a' goto countchar
 j count
 
 
 countchar:
-addi $5, $5, 1 #contador NA
+addi $18, $18, 1 #contador NA
 j count
 
 fim:
-syscall
+break
+.end start
