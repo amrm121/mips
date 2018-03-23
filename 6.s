@@ -1,6 +1,6 @@
 .data
 a: .word 0
-b: .word 20
+bb: .word 20
 c: .word 14
 .text
 
@@ -8,9 +8,10 @@ c: .word 14
 .ent start
 start:  
 lw $6, a
-lw $7, b
+lw $7, bb
 lw $8, c
 li $12, 9
+
 loop:
 beq $6, $12, b1
 addi $6, 1
@@ -20,10 +21,8 @@ li $9, 15
 addi $10, 1
 j loop
 b1: #$6 >= 10 saída do for
-sltu $14, $10, $8 #se $8 > $10 reg14 = 0 else = 1
-beq $14, $0, b3 #$8 > $10
-j fim
-b3:
+sltu $14, $10, $8 #se $10 < $8 reg14 = 1 else = 0
+beq $14, $0, fim #$8 < $10
 li $11, 1
 j fim
 b2: #else $7 < $8
